@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 
 export class MyVPCStack extends cdk.Stack {
+  public readonly vpc: ec2.Vpc;
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -20,5 +21,6 @@ export class MyVPCStack extends cdk.Stack {
     vpc.addGatewayEndpoint('S3Endpoint', {
       service: ec2.GatewayVpcEndpointAwsService.S3,
     });
+    this.vpc = vpc;
   }
 }
