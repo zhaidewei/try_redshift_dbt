@@ -10,17 +10,18 @@ export class MyVPCStack extends cdk.Stack {
     const vpc = new ec2.Vpc(this, "myVPC", {
         subnetConfiguration: [
             {
-                name: "isolated-subnet",
-                subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
+                name: "public",
+                subnetType: ec2.SubnetType.PUBLIC, // demo only
                 cidrMask: 22,
             },
         ],
-        maxAzs: 2
+        maxAzs: 1
     });
     // Need VPC endpoint because it is a private isolated subnet
     vpc.addGatewayEndpoint('S3Endpoint', {
       service: ec2.GatewayVpcEndpointAwsService.S3,
     });
+
     this.vpc = vpc;
   }
 }
