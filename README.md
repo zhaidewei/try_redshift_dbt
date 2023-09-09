@@ -19,3 +19,5 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 ```bash
 npm install @aws-cdk/aws-redshift-alpha@2.80.0-alpha.0
 ```
+
+This [link](https://docs.aws.amazon.com/systems-manager/latest/userguide/managed-instances-default-host-management.html) discuss how to enable ssm session globally.

@@ -62,7 +62,7 @@ export class MyredshiftStack extends cdk.Stack {
     
     // Create an EC2 instance as DB client
     // https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ec2.Instance.html
-    new ec2.Instance(this, 'RedshiftClient', {
+    const ec2Client = new ec2.Instance(this, 'RedshiftClient', {
       vpc: props.vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PRIVATE_ISOLATED,
@@ -74,6 +74,10 @@ export class MyredshiftStack extends cdk.Stack {
       keyName: 'my_keypair', // created manually.
       ssmSessionPermissions: true,
       securityGroup: ec2SecurityGroup,
+    });
+
+    new cdk.CfnOutput(this, 'ecInstanceId', {
+      value: ec2Client.instanceId,
     });
   }
 }
