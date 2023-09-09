@@ -2,20 +2,26 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as s3 from 'aws-cdk-lib/aws-s3';
 import * as redshift from '@aws-cdk/aws-redshift-alpha'// https://constructs.dev/packages/@aws-cdk/aws-redshift-alpha/v/2.80.0-alpha.0/api/Cluster?lang=typescript
 
 interface MyredshiftStackProps extends cdk.StackProps {
   vpc: ec2.Vpc,
+  s3BucketName: string
 }
 
 export class MyredshiftStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: MyredshiftStackProps) {
     super(scope, id, props);
     
+    const supportBucket = s3.Bucket.fromBucketName(this, 'MyBucket', props.s3BucketName);
+
     const redshiftRole = new iam.Role(this, 'RedshiftRole', {
       assumedBy: new iam.ServicePrincipal('redshift.amazonaws.com'),
       description: 'Role that allows Redshift to interact with other services',
     });
+    
+    supportBucket.grantRead(redshiftRole);
 
     const cluster = new redshift.Cluster(this, 'RedshiftCluster', {
       masterUser: {
@@ -35,5 +41,7 @@ export class MyredshiftStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY, // for demo purposes only
       roles: [redshiftRole],
     });
+
+    new cdk.CfnOutput(this, 'redShiftIamRole', { value: redshiftRole.roleArn });
   }
 }

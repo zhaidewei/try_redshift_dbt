@@ -7,13 +7,21 @@ import { MyS3Stack } from '../lib/s3';
 
 const app = new cdk.App();
 
+const defaultEnv = { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION };
+
 const vpc = new MyVPCStack(app, 'MyVPCStack', {
-  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
+  env: defaultEnv,
 });
+
+const supportBucket = new MyS3Stack(app, 'MyS3Stack', {
+  env: defaultEnv,
+});
+
 
 new MyredshiftStack(app, 'MyRedshiftStack', {
   
   vpc: vpc.vpc,
-  env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-  
+  env: defaultEnv,
+  s3BucketName: supportBucket.s3BucketName,
 });
+
