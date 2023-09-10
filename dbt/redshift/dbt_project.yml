@@ -6,6 +6,18 @@ name: 'redshift'
 version: '1.0.0'
 config-version: 2
 
+vars:
+  new_user_default_pwd: 'Password123'
+  dbt_managed_users: [
+    'finance_user',
+    'masked_user',
+    'unmasked_user'
+  ]
+  dbt_managed_grants: {
+    'public_dept_finance': ['does_not_exist_user', 'finance_user'],
+    'public_dept_tech': ['masked_user', 'unmasked_user']
+  }
+
 # This setting configures which "profile" dbt uses for this project.
 profile: 'redshift'
 
@@ -35,3 +47,23 @@ models:
     # Config indicated by + and applies to all files under models/example/
     example:
       +materialized: view
+    base_tickit:
+      materialized: ephemeral
+      schema: tickit
+    dept_finance:
+      materialized: view
+      schema: dept_finance
+    dept_tech:
+      materialized: view
+      schema: dept_tech
+    dept_marketing:
+      materialized: view
+      schema: dept_marketing
+
+seeds:
+  redshift:
+    dept_marketing:
+      schema: dept_marketing
+
+on-run-end:
+  - "{{ macro_manage_users_grants(schemas) }}"

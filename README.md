@@ -66,3 +66,6 @@ copy tickit.sales from 's3://mys3stack-mydemoredshiftbucketahskjfsahfk43a7c739-1
 iam_role 'arn:aws:iam::733829533973:role/MyRedshiftStack-RedshiftRoleD1BA0605-VVLBNCFLUNKZ'
 delimiter '\t' timeformat 'MM/DD/YYYY HH:MI:SS' region 'eu-west-1';
 ```
+
+
+curl 'https://static.us-east-1.prod.workshops.aws/public/3742b70e-4587-48d7-99a1-4214053c265a/static/lab_2a/code/packages.yml' --output .
